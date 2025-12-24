@@ -32,7 +32,8 @@ app.use("/api/job", jobRouter);
 app.use("/api/jobcustomer", jobCustomerRouter);
 app.use("/api/customer", customerRouter);
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
-});
+// app.listen(3000, () => {
+//   console.log('Server is running on port 3000');
+// });
 
+export default app;
