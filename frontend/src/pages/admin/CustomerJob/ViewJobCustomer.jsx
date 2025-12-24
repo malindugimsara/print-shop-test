@@ -2,12 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
+import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdOutlineDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { VscLoading } from "react-icons/vsc";
 import { Link, useNavigate } from "react-router-dom";
-import { QRCodeCanvas } from "qrcode.react";
 
-export default function Job() {
+export default function ViewJobCustomer() {
   const [job, setJob] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [selectdJob, setSelectedJob] = useState(null);
@@ -24,7 +24,7 @@ export default function Job() {
   useEffect(() => {
     if (!loaded) {
       axios
-        .get(import.meta.env.VITE_BACKEND_URL + "/api/job", {
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/jobcustomer", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((response) => {
@@ -47,7 +47,7 @@ export default function Job() {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(import.meta.env.VITE_BACKEND_URL + "/api/job/" + jobID, {
+      await axios.delete(import.meta.env.VITE_BACKEND_URL + "/api/jobcustomer/" + jobID, {
         headers: { Authorization: "Bearer " + token },
       });
       setLoaded(false);
@@ -55,19 +55,6 @@ export default function Job() {
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to delete Job. Please try again.");
     }
-  }
-
-  function generateQRData(job) {
-    return JSON.stringify({
-      jobID: job.jobID,
-      name: job.name,
-      email: job.email,
-      phoneNumber: job.phoneNumber,
-      details: job.details,
-      needDate: job.needDate,
-      status: job.status,
-      images: job.images
-    });
   }
 
   const filteredJobs = job.filter((job) => {
@@ -83,9 +70,18 @@ export default function Job() {
 
   return (
     <div className="w-full h-full mb-10">
+
+      {/* back button */}
+      <Link
+        to="/admin/viewjob"
+        className="bg-gray-300 hover:bg-gray-400 rounded-lg font-semibold transition"
+      >
+        <IoMdArrowRoundBack className="text-lg w-10 h-7 ml-1 pt-1 pb-1 bg-gray-300 hover:bg-gray-400 rounded-lg font-semibold transition" />
+      </Link>
+
       {/* ➕ Add Job Button */}
       <Link
-        to={"/admin/addjob"}
+        to={"/admin/AddCustomerJob"}
         className="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 shadow-xl text-white bg-blue-600 hover:bg-blue-700 p-4 sm:p-5 text-3xl rounded-full flex items-center gap-2 transition-all duration-200 border-4 border-white z-50"
         title="Add Job"
       >
@@ -187,9 +183,6 @@ export default function Job() {
                       Files
                     </button>
                   </td>
-
-
-
                   <td className="p-2 sm:p-4">
                     <div className="flex flex-wrap justify-center gap-2">
                       <MdOutlineDeleteOutline
@@ -198,17 +191,10 @@ export default function Job() {
                         title="Delete"
                       />
                       <MdOutlineEdit
-                        onClick={() => navigate("/admin/editjob/", { state: job })}
+                        onClick={() => navigate(`/admin/editjobcustomer/${job.jobID}`)}
                         className="text-[22px] hover:text-blue-600 cursor-pointer transition-all duration-150"
                         title="Edit"
                       />
-                      <button
-                        onClick={() => setSelectedJob(job)}
-                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold transition-all duration-150 shadow"
-                        title="Show QR"
-                      >
-                        QR
-                      </button>
                     </div>
                   </td>
                 </tr>
@@ -229,8 +215,8 @@ export default function Job() {
       )}
 
       {fileModalJob && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50 p-4">
-          <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-3xl overflow-y-auto max-h-[80vh]">
+        <div className="fixed inset-0 backdrop-blur-md bg-white/30 bg-opacity-40 flex justify-end items-center z-50 p-4">
+          <div className="bg-white p-6 rounded-xl shadow-2xl  max-w-lg overflow-y-auto max-h-[80vh] mr-20 ">
             <h2 className="text-2xl font-bold mb-4 text-blue-600">Files for {fileModalJob.jobID}</h2>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -292,38 +278,8 @@ export default function Job() {
         </div>
       )}
 
-
-
-      {/* QR Code Modal */}
-      {selectdJob && (
-        <div className="fixed inset-0 bg-blue-100 bg-opacity-40 flex justify-center items-center z-50 p-4 sm:p-0">
-          <div className="bg-white p-6 sm:p-10 rounded-xl text-center shadow-2xl relative w-full max-w-[400px] border-2 border-blue-200">
-            <h2 className="text-2xl font-bold mb-6 text-blue-600">Job QR Code</h2>
-            <QRCodeCanvas value={generateQRData(selectdJob)} size={220} className="mx-auto" />
-            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center">
-              <button
-                onClick={() => setSelectedJob(null)}
-                className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-150 shadow"
-              >
-                Close
-              </button>
-              <button
-                onClick={() => {
-                  const canvas = document.querySelector("canvas");
-                  const url = canvas.toDataURL("image/png");
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.download = `job-${selectdJob.jobID}.png`;
-                  a.click();
-                }}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-150 shadow"
-              >
-                Download
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
+
+

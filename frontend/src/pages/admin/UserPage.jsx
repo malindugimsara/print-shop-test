@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 function UsersPage() {
   const [user, setUser] = useState([]);
+  const [customer, setCustomer]= useState([])
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
@@ -29,14 +30,33 @@ function UsersPage() {
     }
   };
 
+  const fetchCustomer = async () => {
+    try {
+      const response = await axios.get(
+        import.meta.env.VITE_BACKEND_URL + "/api/customer/",
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      setCustomer(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching customer:", error);
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
+    fetchCustomer();
   }, []);
 
   // delete user
   async function deleteUser(userID) {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this job? This action cannot be undo."
+      "Are you sure you want to delete user? This action cannot be undo."
     );
 
     if (!confirmDelete) return;
@@ -61,6 +81,34 @@ function UsersPage() {
     }
   }
 
+  // delete customer
+  async function deleteCustomer(customerID) {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete customer? This action cannot be undo."
+    );
+
+    if (!confirmDelete) return;
+
+    const token = localStorage.getItem("token");
+    try {
+      await axios.delete(
+        import.meta.env.VITE_BACKEND_URL + "/api/customer/" + customerID,
+        {
+          headers: { Authorization: "Bearer " + token },
+        }
+      );
+      // update UI without refreshing
+      setCustomer((prevUsers) => prevUsers.filter((u) => u._id !== customerID));
+
+      toast.success("Customer deleted successfully!");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to delete Customer. Please try again."
+      );
+    }
+  }
+
   return (
     <>
       {isLoading ? (
@@ -81,7 +129,7 @@ function UsersPage() {
                 .map((admin) => (
                   <div
                     key={admin._id}
-                    className="bg-gradient-to-br from-[#e3f2fd] to-[#bbdefb] shadow-xl rounded-2xl p-5 flex items-center justify-between transition-transform hover:scale-105"
+                    className="bg-gradient-to-br from-red-100 to-red-300 shadow-xl rounded-2xl p-5 flex items-center justify-between transition-transform hover:scale-105"
                   >
                     <div className="flex items-center min-w-0">
                       <img
@@ -129,10 +177,10 @@ function UsersPage() {
             </div>
           </section>
 
-          {/* Customer Accounts */}
+          {/* User Accounts */}
           <section>
             <h1 className="text-3xl font-extrabold text-center mb-5 text-[#388e3c] tracking-wide">
-              Customer Accounts
+              User Accounts
             </h1>
             <hr className="mb-8 border-[#1976d2]" />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -179,6 +227,61 @@ function UsersPage() {
                       </Link>
                       <button
                         onClick={() => deleteUser(customer._id)}
+                        className="px-3 py-2 bg-red-500 text-white rounded-lg text-xl hover:bg-red-600 transition"
+                      >
+                        <MdOutlineDeleteOutline />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </section>
+
+          {/* {Customer Details} */}
+          <section className="mt-22 mb-16">
+            <h1 className="text-3xl font-extrabold text-center mb-5 text-blue-600 tracking-wide">
+              Customer Details
+            </h1>
+            <hr className="mb-8 border-[#1976d2]" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {customer
+                .map((customer) => (
+                  <div
+                    key={customer._id}
+                    className="bg-gradient-to-br from-blue-50 to-blue-300 shadow-xl rounded-2xl p-5 flex items-center justify-between transition-transform hover:scale-105"
+                  >
+                    <div className="flex items-center min-w-0">
+                      <img
+                        src="/user.png"
+                        alt="user"
+                        className="w-16 h-16 rounded-full mr-5 border-4 border-[#1976d2] bg-white shadow flex-shrink-0"
+                      />
+
+                      <div className="min-w-0">
+                        <div className="font-bold text-[#1976d2] text-lg truncate">
+                          {customer.name}
+                        </div>
+
+                        <div className="text-sm text-gray-700 break-all">
+                          {customer.email}
+                        </div>
+
+                        <div className="text-sm text-gray-700 break-all">
+                          {customer.phoneNumber}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2 items-end">
+                      <Link
+                        to="/admin/editcustomer"
+                        state={customer}
+                        className="px-3 py-2 bg-blue-500 text-white rounded-lg text-xl hover:bg-blue-600 transition"
+                      >
+                        <MdOutlineEdit />
+                      </Link>
+                      <button
+                        onClick={() => deleteCustomer(customer._id)}
                         className="px-3 py-2 bg-red-500 text-white rounded-lg text-xl hover:bg-red-600 transition"
                       >
                         <MdOutlineDeleteOutline />

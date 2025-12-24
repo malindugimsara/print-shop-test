@@ -44,6 +44,9 @@ export function saveUser(req, res) {
         isEmailVerified: req.body.isEmailVerified || false // Default isEmailVerified to false
     })
 
+    if (!/^\d{10}$/.test(req.body.phoneNumber)) {
+          return res.status(400).json({ message: "Phone number must be exactly 10 digits" });
+    }
 
     user.save().then(()=> {
         res.json({
@@ -314,6 +317,10 @@ export function updateUser(req, res) {
         });
       }
 
+      if (!/^\d{10}$/.test(req.body.phoneNumber)) {
+          return res.status(400).json({ message: "Phone number must be exactly 10 digits" });
+      }
+      
       res.json({
         message: "User updated successfully",
         user,

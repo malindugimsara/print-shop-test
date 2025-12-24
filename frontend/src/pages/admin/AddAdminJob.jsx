@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import JobHeader from "./AddJob/JobHeader";
+import CustomerInfo from "./AddJob/CustomerInfo";
+import AddJobActions from "./AddJob/AddJobActions";
+import TuteJobItem from "./AddJob/TuteJobItem";
+import CoverPageJobItem from "./AddJob/CoverPageJobItem";
+import OtherJobItem from "./AddJob/OtherJobItem";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
-import EditJobHeader from "./EditJob/EditJobHeader";
-import EditCustomerInfo from "./EditJob/EditCustomerInfo";
-import EditTuteJobItem from "./EditJob/EditTuteJobItem";
-import EditCoverPageJobItem from "./EditJob/EditCoverPageJobItem";
-import EditOtherJobItem from "./EditJob/EditOtherJobItem";
-import EditJobActions from "./EditJob/EditJobActions";
+import { useNavigate } from "react-router-dom";
 
-export default function EditJob() {
-  const { jobId } = useParams();
-  const navigate = useNavigate();
- 
+export default function AddAdminJob() {
+
  
   // CUSTOMER DETAILS
   const [customer, setCustomer] = useState({
@@ -23,49 +21,14 @@ export default function EditJob() {
     needDate: "",
   });
 
- 
   
   // MULTIPLE ITEMS STATE
   const [items, setItems] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [showSpinner, setShowSpinner] = useState(false);
-  const [loading, setLoading] = useState(true);
 
- 
-  // FETCH JOB DATA
-  useEffect(() => {
-    const fetchJob = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/job/${jobId}`,
-            {
-                headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-            }
-        );
-
-        const job = res.data;
-        setCustomer({
-          name: job.name,
-          email: job.email,
-          phoneNumber: job.phoneNumber,
-          jobDate: job.jobDate,
-          needDate: job.needDate,
-        });
-
-        setItems(job.items || []);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        toast.error("Failed to load job data");
-        setLoading(false);
-      }
-    };
-
-    fetchJob();
-  }, [jobId]);
-
-  
   // ADD NEW ITEM
+  
   const addItem = (type) => {
     const newItem = {
       type,
@@ -76,16 +39,18 @@ export default function EditJob() {
     setItems([...items, newItem]);
     setActiveIndex(items.length); // open newly added item
   };
+  const navigate = useNavigate();
 
- 
+  
   // UPDATE ITEM DATA
+  
   const updateItemData = (index, newData) => {
     const copy = [...items];
     copy[index].data = newData;
     setItems(copy);
   };
 
- 
+  
   // UPDATE ITEM STATUS
   const updateItemStatus = (index, newStatus) => {
     const copy = [...items];
@@ -93,9 +58,8 @@ export default function EditJob() {
     setItems(copy);
   };
 
-  
-  // SUBMIT JOB UPDATE
-  const updateJob = async () => {
+  // SUBMIT JOB
+  const submitJob = async () => {
     if (!customer.name || !customer.phoneNumber) {
       toast.error("Please fill all customer details");
       return;
@@ -114,26 +78,22 @@ export default function EditJob() {
     try {
       setShowSpinner(true);
 
-      const res = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/api/job/${jobId}`,
-        payload,
-        {
-            headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-        }
+      const res = await axios.post(
+        import.meta.env.VITE_BACKEND_URL + "/api/job",
+        payload
       );
 
-      toast.success("Job updated successfully!");
-      navigate("/admin/viewadminAddjob");
+      toast.success("Job submitted successfully!");
+      navigate("/admin/viewjob")
       setShowSpinner(false);
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || "Failed to update job");
+      toast.error(err.response?.data?.message || "Failed to submit job");
       setShowSpinner(false);
     }
-};
+  };
 
-   
-    // DELETE ITEM
+  // DELETE ITEM
     const deleteItem = (index) => {
     const newItems = items.filter((_, i) => i !== index);
 
@@ -148,54 +108,48 @@ export default function EditJob() {
     };
 
 
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  }
-
-return (
-    <div className="min-h-screen bg-[#F8F9FA] py-12 px-6">
+  return (
+    <div className="min-h-screen bg-[#F8F9FA] py-10 px-6">
       <div className="max-w-5xl mx-auto bg-white p-10 rounded-2xl shadow-xl border border-gray-200">
 
         {/* Page Top Header */}
-        <EditJobHeader />
+        <JobHeader />
 
         {/* Customer Section */}
-        <EditCustomerInfo customer={customer} setCustomer={setCustomer} />
+        <CustomerInfo customer={customer} setCustomer={setCustomer} />
 
         
         {/* RENDER ITEM LIST (TABS) */}
         {items.length > 0 && (
-        <div className="mt-6 mb-4 flex gap-3 flex-wrap">
+          <div className="mt-6 mb-4 flex gap-3 flex-wrap">
             {items.map((item, index) => (
-            <div key={index} className="flex items-center gap-2">
-                
-                {/* Select Tab */}
+              <div key={index} className="flex gap-2">
                 <button
-                onClick={() => setActiveIndex(index)}
-                className={`px-4 py-2 rounded-lg shadow 
+                  onClick={() => setActiveIndex(index)}
+                  className={`px-4 py-2 rounded-lg shadow 
                     ${activeIndex === index ? "bg-blue-600 text-white" : "bg-gray-200"}`}
                 >
-                {item.type.toUpperCase()} #{index + 1}
+                  {item.type.toUpperCase()} #{index + 1}
                 </button>
 
                 {/* Delete Button */}
                 <button
-                onClick={() => deleteItem(index)}
-                className="w-8 h-8 bg-red-500 text-white rounded-4xl hover:bg-red-600"
+                  onClick={() => deleteItem(index)}
+                  className="w-8 h-8 bg-red-500 text-white rounded-4xl hover:bg-red-600"
                 >
-                X
+                  X
                 </button>
-            </div>
+              </div>
             ))}
-        </div>
+          </div>
         )}
-        
+
         {/* RENDER ACTIVE ITEM FORM */}
         <div className="mt-6">
           {activeIndex !== null && (
             <>
               {items[activeIndex].type === "tute" && (
-                <EditTuteJobItem
+                <TuteJobItem
                   jobData={items[activeIndex].data}
                   setJobData={(data) => updateItemData(activeIndex, data)}
                   status={items[activeIndex].status}
@@ -204,7 +158,7 @@ return (
               )}
 
               {items[activeIndex].type === "cover" && (
-                <EditCoverPageJobItem
+                <CoverPageJobItem
                   jobData={items[activeIndex].data}
                   setJobData={(data) => updateItemData(activeIndex, data)}
                   status={items[activeIndex].status}
@@ -213,7 +167,7 @@ return (
               )}
 
               {items[activeIndex].type === "other" && (
-                <EditOtherJobItem
+                <OtherJobItem
                   jobData={items[activeIndex].data}
                   setJobData={(data) => updateItemData(activeIndex, data)}
                   status={items[activeIndex].status}
@@ -224,10 +178,10 @@ return (
           )}
         </div>
 
-        {/* ACTION BUTTONS (Add Item + Update) */}
-        <EditJobActions
+        {/* ACTION BUTTONS (Add Item + Submit) */}
+        <AddJobActions
           addItem={addItem}
-          submitJob={updateJob}
+          submitJob={submitJob}
           showSpinner={showSpinner}
         />
 

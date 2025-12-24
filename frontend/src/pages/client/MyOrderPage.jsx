@@ -212,7 +212,7 @@ const MyOrdersPage = () => {
                         {/* Preview Button */}
                         <button
                           onClick={() => window.open(fileUrl, "_blank")}
-                          className="flex-1 bg-green-500 hover:bg-green-600 text-white px-2 sm:px-3 py-1 rounded text-xs"
+                          className=" ml-3 flex-1 bg-green-500 hover:bg-green-600 text-white px-2 sm:px-3 py-1 rounded text-xs"
                         >
                           Preview
                         </button>
@@ -248,7 +248,7 @@ const MyOrdersPage = () => {
 
                 <button
                   onClick={() => setFileModalJob(null)}
-                  className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-semibold text-sm sm:text-base"
+                  className="ml-3 mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-semibold text-sm sm:text-base"
                 >
                   Close
                 </button>

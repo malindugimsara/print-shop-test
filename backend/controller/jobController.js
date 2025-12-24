@@ -118,8 +118,6 @@ import nodemailer from "nodemailer";
             });
     }
 
-
-
     export function deleteJob(req, res){
         if (req.user== null){
             res.status(403).json({

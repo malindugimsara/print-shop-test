@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import jobRouter from './router/jobRouter.js';
 import jobCustomerRouter from './router/jobCustomerRouter.js';
+import customerRouter from './router/customerRouter.js';
 
 dotenv.config();
 const app = express();
@@ -29,6 +30,7 @@ app.use(authjwt)
 app.use("/api/user", userRouter);
 app.use("/api/job", jobRouter);
 app.use("/api/jobcustomer", jobCustomerRouter);
+app.use("/api/customer", customerRouter);
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');

@@ -7,8 +7,18 @@ export default function AddJobActions({ addItem, submitJob, showSpinner }) {
 
   const navigate = useNavigate();
   
+  async function handleAddCustomer(customer) {
+      try {
+        await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/customer/phoneNumber/${customer.phoneNumber}`
+        );
+        toast.error("Customer already exists");
+        return;
+      } catch {}
+  }
+
   function closeEditor() {
-    navigate("/admin/viewjob");
+    navigate("/admin/addjob");
   }
 
   return (

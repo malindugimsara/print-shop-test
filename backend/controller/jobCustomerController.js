@@ -18,7 +18,7 @@ export const createJob = async (req, res) => {
         });
 
         const nextNumber = highestNumber + 1;
-        const jobID = `J${nextNumber.toString().padStart(3, "0")}`;
+        const jobID = `JC${nextNumber.toString().padStart(3, "0")}`;
 
         const job = new JobCustomer({
             jobID,
@@ -56,6 +56,32 @@ export const createJob = async (req, res) => {
         JobCustomer.find({ email: req.user.email })
             .then((jobs) => res.json(jobs))
             .catch(() => res.status(500).json({ message: "Job not found" }));
+    }
+
+    export function getJobById(req, res) {
+        if (!req.user) {
+            return res.status(403).json({ message: "You need to login first" });
+        }
+
+        const jobID = req.params.id; // matches URL param
+
+        JobCustomer.findOne({ jobID: jobID }) // <-- correct field name
+            .then((job) => {
+                if (!job) {
+                    return res.status(404).json({ message: "Job not found" });
+                }
+
+                // Optional: restrict access for non-admin users
+                if (req.user.role !== "admin" && job.email !== req.user.email) {
+                    return res.status(403).json({ message: "You cannot access this job" });
+                }
+
+                res.json(job);
+            })
+            .catch((err) => {
+                console.error(err);
+                res.status(500).json({ message: "Server error", error: err.message });
+            });
     }
 
     export function deleteJob(req, res){

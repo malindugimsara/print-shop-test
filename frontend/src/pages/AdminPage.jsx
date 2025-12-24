@@ -1,4 +1,4 @@
-import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, Link, useLocation, useNavigate, Router } from "react-router-dom";
 import { FiHome, FiMenu, FiX, FiFileText, FiPrinter } from "react-icons/fi";
 import { FaUsers, FaClipboardList } from "react-icons/fa";
 import { VscSignOut } from "react-icons/vsc";
@@ -10,11 +10,19 @@ import CreateAdminAccount from "./admin/CreateAdminAccount.jsx";
 import UsersPage from "./admin/UserPage.jsx";
 import EditUser from "./admin/EditUser.jsx";
 import WelcomeAdmin from "../components/WelcomeAdmin.jsx";
-import Job from "./admin/Job.jsx";
-import AddJob from "./admin/AddJob.jsx";
 import EditJob from "./admin/EditJob.jsx";
 import JobReportPage from "./admin/JobReportPage.jsx";
+import AdminAddJob from "./admin/ViewAdminAddJob.jsx";
+import EditJobCustomer from "./admin/CustomerJob/EditJobCustomer.jsx";
+import AddCustomerJob from "./admin/CustomerJob/AddCustomerJob.jsx";
+import EditCustomer from "./admin/EditCustomer";
 import ViewJob from "./admin/ViewJob.jsx";
+import ViewJobCustomer from "./admin/CustomerJob/ViewJobCustomer.jsx";
+import AddAdminJob from "./admin/AddAdminJob.jsx";
+import AddJob from "./admin/AddJob.jsx";
+import CustomerJoReportGenerate from "./admin/CustomerJoReportGenerate.jsx";
+import GeneralJoReportGenerate from "./admin/GeneralJoReportGenerate.jsx";
+
 
 export default function AdminPage() {
   const location = useLocation();
@@ -138,13 +146,21 @@ export default function AdminPage() {
             
             <Routes>
               <Route path="/" element={<WelcomeAdmin />} />
-              <Route path="/addjob" element={<AddJob />} />
-              <Route path="/viewjob" element={<ViewJob />} />
+              <Route path="/addadminjob" element={<AddAdminJob />} />
+              <Route path="/viewadminAddjob" element={<AdminAddJob />} />
               <Route path="/users" element={<UsersPage />} />
               <Route path="/report" element={<JobReportPage />} />
               <Route path="/createaccount" element={<CreateAdminAccount />} />
               <Route path="/edituser" element={<EditUser />} />
               <Route path="/editjob/:jobId" element={<EditJob />} />
+              <Route path="/viewjobcustomer" element={<ViewJobCustomer />} />
+              <Route path="/addCustomerJob" element={<AddCustomerJob />} />
+              <Route path="/editjobcustomer/:jobID" element={<EditJobCustomer />} />
+              <Route path="/editcustomer" element={<EditCustomer />} />
+              <Route path='/viewjob' element={<ViewJob />} />
+              <Route path='/addjob' element={<AddJob />} />
+              <Route path="/customerreport" element={<CustomerJoReportGenerate />} />
+              <Route path="/generalreport" element={<GeneralJoReportGenerate />} />
             </Routes>
           </div>
         </>

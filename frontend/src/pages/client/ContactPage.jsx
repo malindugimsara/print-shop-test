@@ -1,4 +1,6 @@
 import { FiPhone, FiMapPin, FiMail, FiSend } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
+import { SiFacebook } from "react-icons/si";
 
 export default function ContactPage() {
   return (
@@ -24,14 +26,14 @@ export default function ContactPage() {
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-[#2C3E50]">Phone</h3>
             </div>
-            <p className="text-sm sm:text-base text-gray-700">+94 77 123 4567</p>
+            <p className="text-sm sm:text-base text-gray-700">+94 78 78 200 10</p>
           </div>
 
           {/* Card 2 - Facebook */}
           <div className="bg-gradient-to-br from-[#48CAE4]/20 to-[#D16BA5]/20 backdrop-blur-xl border border-[#E0E0E0] rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8 hover:-translate-y-1 hover:shadow-2xl transition-all">
             <div className="flex items-center gap-3 sm:gap-4 mb-4">
               <div className="p-3 rounded-xl bg-[#48CAE4]/30">
-                <FiMail className="text-[#48CAE4] text-lg sm:text-xl" />
+                <SiFacebook className="text-[#48CAE4] text-lg sm:text-xl" />
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-[#2C3E50]">Facebook</h3>
             </div>
@@ -40,14 +42,14 @@ export default function ContactPage() {
 
           
           {/* Card 3 - Whatsapp */}
-          <div className="bg-gradient-to-br from-[#48CAE4]/20 to-[#D16BA5]/20 backdrop-blur-xl border border-[#E0E0E0] rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8 hover:-translate-y-1 hover:shadow-2xl transition-all">
+          <div className="bg-gradient-to-br from-[#25D366]/20 to-[#D16BA5]/20 backdrop-blur-xl border border-[#E0E0E0] rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8 hover:-translate-y-1 hover:shadow-2xl transition-all">
             <div className="flex items-center gap-3 sm:gap-4 mb-4">
-              <div className="p-3 rounded-xl bg-[#48CAE4]/30">
-                <FiMail className="text-[#48CAE4] text-lg sm:text-xl" />
+              <div className="p-3 rounded-xl bg-[#25D366]/30">
+                <FaWhatsapp className="text-[#25D366] text-lg sm:text-xl" />
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-[#2C3E50]">WhatsApp</h3>
             </div>
-            <p className="text-sm sm:text-base text-gray-700">+94 77 123 4567</p>
+            <p className="text-sm sm:text-base text-gray-700">+94 78 78 200 10</p>
           </div>
 
           {/* Card 4 - Location */}
@@ -58,7 +60,7 @@ export default function ContactPage() {
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-[#2C3E50]">Location</h3>
             </div>
-            <p className="text-sm sm:text-base text-gray-700">No.21, Print Street, Colombo, Sri Lanka</p>
+            <p className="text-sm sm:text-base text-gray-700">120/1, 11th Mile post, Elpitiya</p>
           </div>
 
           {/* Card 5 - Email */}
@@ -69,7 +71,7 @@ export default function ContactPage() {
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-[#2C3E50]">Email</h3>
             </div>
-            <p className="text-sm sm:text-base text-gray-700">support@printshop.lk</p>
+            <p className="text-sm sm:text-base text-gray-700">channagraphics88@gmail.com</p>
           </div>
         </div>
       </div>
