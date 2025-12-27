@@ -116,7 +116,7 @@ export default function EditJobCustomer() {
             );
 
             toast.success("Job updated successfully!");
-            navigate("/admin/jobcustomer");
+            navigate("/admin/viewjobcustomer");
         } catch (error) {
             console.error(error);
             toast.error(error.response?.data?.message || "Failed to update job.");
@@ -276,7 +276,7 @@ export default function EditJobCustomer() {
                     </button>
 
                     <Link
-                        to="/admin/jobcustomer"
+                        to="/admin/viewjobcustomer"
                         className="w-full h-12 bg-red-500 text-white rounded-lg flex items-center justify-center"
                     >
                         Cancel
