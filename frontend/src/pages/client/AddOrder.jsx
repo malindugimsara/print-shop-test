@@ -77,7 +77,7 @@ export default function AddOrder() {
 
             const imageUrls = await Promise.all(promisesArray);
 
-            if (!name || !email || !phoneNumber || !details || !needDate) {
+            if (!name || !email || !phoneNumber || !needDate) {
                 toast.error("Please fill in all required fields.");
                 setShowSpinner(false);
                 return;
